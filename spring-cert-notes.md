@@ -329,16 +329,58 @@ Joinpoint Parameter provides context about intercepted point
 
 ## Objective 2.2 Transaction Management with Spring
 ### 2.2.1 Describe and use Spring Transaction Management
-- 
+- 1: Declare a `PlatformTransactionManager` bean
+- 2: Declare the transactional methods
+    -  Using annotations or Programmatic
+    - Can mix and match
+- 3: add `@EnableTransactionManagement` to a configuration class
+
+`@Transactional` annotation applied to methods/classes/interfaces that are atomic units of work
+
+Spring proxies
+
+Rollsback if method throws a runtime exception
+- Transaction context bound to current thread
+- JdbcTemplate used in a transactional method uses that context automatically
+- Can get it manually `DataSourceUtils.getConnection(dataSource)`
+- Can be combined at class and method level for overriding
+
 ### 2.2.2 Configure Transaction Propagation
+- 7 levels of propogation
+- REQUIRED: defaults, use current transaction. Create new one if it  does not exist
+- REQUIRES_NEW: Creates a new one all the time, suspending the current transaction if one exists
+- Rules enforced by a proxy, remember if a method is called internal in a class its proxy won't be used
 ### 2.2.3 Setup Rollback rules
+- By defaults only if runtime exception
+- `rollbackFor` and `noRollbackFor` attributes on `@Transactional`
 ### 2.2.4 Use Transactions in Tests
+- Annotate test method with `@Transactional`
+- Transactions will be rolled back after testing!
+- use `@Commit` if you do want something to commit 
 ## Objective 2.3 Spring Boot and Spring Data for Backing Stores
 ### 2.3.1 Implement a Spring JPA application using Spring Boot
-- I have done this 10000000 times
+- use `spring-boot-starter-data-jpa`
+- Spring autoconfigures
+    - DataSource
+    - EntityManagerFactoryBean
+    - JPATransactionManager
+- Configuration exists for dialect used, auto-creating tables, showing sql, any other hibernate proeprty
+- `@EntityScan` annotation in application.java
 ### 2.3.2 Create Spring Data Repositories for JPA
-- I have also done this 10000000 times
+- Annotate entity classes
+    - `@Entity`
+    - `@Table` for table name
+    - `@Id`
+    - `@GeneratedValue(strategy)`
 
+Other annotations exist for diffrent data stores
+
+- Extend from a repository interface 
+    - `Repository<T, ID>`
+- You can then define your own methods usinger finders or `@Query`
+    - findBy[datamemeberofclass][op]
+    - `@Query` uses query lanaguage of underlying product
+- Spring will automatically scan everything from package application class exists in or you can use `@EnableJPARepositories(basePackage)`
 
 # Section 3 – Spring MVC
 ## Objective 3.1 Web Applications with Spring Boot
