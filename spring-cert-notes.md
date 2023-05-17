@@ -385,12 +385,60 @@ Other annotations exist for diffrent data stores
 # Section 3 – Spring MVC
 ## Objective 3.1 Web Applications with Spring Boot
 ### 3.1.1 Explain how to create a Spring MVC application using Spring Boot
+- Web Servelet Apporach
+    - Traditional
+    - Based on Java EE servlet
+    - 
+- Reactive Approach
+    - Newer
+    - More efficient
+    - non blocking
+- Springboot supports embedded servlet containers
+    - can also still deploy by war
+- `spring-boot-starter-web`
+
 ### 3.1.2 Describe the basic request processing lifecycle for REST requests
+- Request is sent to dispatcher servlet
+    - handles converting the message
+- Dispatch servlet then calls controller with dispatch request
+- controlle returns data to the dispatch servlet
+- Data is converted again, response is sent back out
+- We only deal with controller and view
 ### 3.1.3 Create a simple RESTful controller to handle GET requests
+- `@Controller`
+- `@GetMapping`
+- `@ResponseBody`
+- `@RestController` can be used to ommit response body
+
+- Controller method arguments like Locale, principle, http session can also be used as a parameter in requests
+
+- `@RequestParam` gets from `?paramname`
+- `@PathVariable` gets from `\pathvariableName` 
+    - NO need for annotation value if parameter name matches parameter name
+
 ### 3.1.4 Configure for deployment
+- Just build it, use embedded tomcat container
+- To use another servlet container exclude tomcat then include it in depenencies
+- If you want to run in jar/war via web container
+    - extend Application class with `SpringBootServletInitializer`
+    - Specify configuration classes to use
+    - Define a main method (if running from jar)
+- Mark Tomcat dependencies as provided when building WARS for traditional containers
+- Building project by `mvn package` or `gradle assemble` produces 2 jars, one fat and one with just app code
+
 ## Objective 3.2 REST Applications
 ### 3.2.1 Create controllers to support the REST endpoints for various verbs
+- Use diffrent verbs
+- GET, PUT, POST, DELETE, PATCH
 ### 3.2.2 Utilize RestTemplate to invoke RESTful services
+- Used for builing rest client applications
+- Supports all HTTP methods
+- Create using 
+    - `new RestTemplate()`
+    - Autowire `RestTemplateBuilder` in spring class
+- You can get responseEntity instead of body if we want to deal with HTTP status codes and headers (`getForEntity()`)
+- You can use RequestEntity to send requests too!
+- RestTemplate is not deprecated, but it also won't evolve. WebClient is the new hotness to support new stuff like streaming
 
 
 # Section 4 – Testing
