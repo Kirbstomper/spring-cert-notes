@@ -491,11 +491,54 @@ Can implement custom AuthenticationProvider
 # Section 6 – Spring Boot
 ## Objective 6.1 Spring Boot Feature Introduction
 ### 6.1.1 Explain and use Spring Boot features
+- Opinionated view of spring platform and third party libraries
+- Supports many diffrent project types
+- Handles most low level setup for you
+- Gives you cool stuff like health checks, containerization, embedded servers, externalized configuration
+
 ### 6.1.2 Describe Spring Boot dependency management
+- Depenencies are managed through parents and starters
+- You can exclude/include diffrent versions of stuff
+- Spring boot parent pom determines version of spring
+- Starters bring in multiple coordinated dependencies, including transitive dependencies
+
 ## Objective 6.2 Spring Boot Properties and Autoconfiguration
 ## 6.2.1 Describe options for defining and loading properties
+- Properties files
+- Environment Variables
+- JVM properties
+- Profiles
+- Supports YAML also
+
+- Multiple profile specific properties can be in same file use `---` to 
+indicate logical file
+
+- Loads properties in this order (older can be overwritten)
+    - Default properties (specified by setting SpringApplication.setDefaultProperties).
+    - @PropertySource annotations on your @Configuration classes. Please note that such property sources are not added to the Environment until the application context is being refreshed. This is too late to configure certain properties such as logging.* and spring.main.* which are read before refresh begins.
+    - Config data (such as application.properties files).
+    - A RandomValuePropertySource that has properties only in random.*.
+    - OS environment variables.
+    - Java System properties (System.getProperties()).
+    - JNDI attributes from java:comp/env.
+    - ServletContext init parameters.
+    - ServletConfig init parameters.
+    - Properties from SPRING_APPLICATION_JSON (inline JSON embedded in an environment variable or system property).
+    - Command line arguments.
+    - properties attribute on your tests. Available on @SpringBootTest and the test annotations for testing a particular slice of your application.
+    - @TestPropertySource annotations on your tests.
+    - Devtools global settings properties in the $HOME/.config/spring-boot directory when devtools is active.
 ## 6.2.2 Utilize auto-configuration
+- `@EnableAutoConfiguration`
+- Spring boot will automatically create some beans it things you need
+- Use @SpringBootApplication is common
+- Uses spring context and classpath to autoconfigure stufff for you
 ## 6.2.3 Override default configuration
+- You can overrider defaults by...
+    - Setting some spring boot properties
+    - Explicitly define some beans so spring boot wont
+    - Explicity disable some auto configuration
+    - Change dependencies and their versions
 ## Objective 6.3 Spring Boot Actuator
 ### 6.3.1 Configure Actuator endpoints
 ### 6.3.2 Secure Actuator HTTP endpoints
