@@ -1,6 +1,6 @@
 # Spring Notes
 
-## Section 1 – Spring Core 
+# Section 1 – Spring Core 
 ### Objective 1.1 Introduction to Spring Framework 
 - The Spring Framework is an open source, lightweight DI(Dependency injection) Container and Framework for building Java enterprise applications
 - Apache 2 License
@@ -225,6 +225,8 @@ These are NOT spring annotations, JSR-250/ `javax.annotation` . Spring just supp
 - Weaving: Technique by which aspects are combined with main code
 - AOP Proxy: Enhanced class that stands in place of your original
 
+
+
 `@Aspect` Annotatation: AspectJ annotation, not spring specific. So also annotation with `@Component`
 
 `@Before` Defines the advice
@@ -244,21 +246,142 @@ Joinpoint Parameter provides context about intercepted point
 ### 1.6.2 Implement and deploy Advices using Spring AOP 
 - 
 ### 1.6.3 Use AOP Pointcut Expressions 
+- Spring AOP uses AspectJ's pointcut expression language; supports a partial subset
+- `execution(methodPattern)`
+- Can be chained together
+
+    `execution(methodPattern) || execution(methodPattern)`
+- Method Pattern
+
+    `[Modifiers] ReturnType [ClassType] MethodName(Arguments) [Throws Exception Type]`
+    
+    Wildcards:
+    - '*' matches once
+    - '.." matches zero or more
+
+    Restrict By Class:
+    - Includes subclasses
+    - Ignored if a different implementation is used
+
+    Restrict by interface
+    - More flexible, works if implementation changes
+
+    Use annotations
+    - Matches if annotation is present
+
 ### 1.6.4 Explain different types of Advice and when to use them 
+- `@Before`
+- `@AfterReturning`
+    - `returning` attribute 
+- `@AfterThrowing`
+    - `throwing` attribute
+    - Only invokes after right exception type is thrown
+    - Will not stop exception from propgating, but can throw a new one
+    - Use `@Around` if you want to stop from propgating
+- `@After`
+    - Called regardless of if an exception has been thrown or not
+- `@Around`
+    - Inherits from JoinPoint and adds `proceed()` method
+    - Example was on caching 
 
 
 
 
-## Section 2 – Data Management
+
+# Section 2 – Data Management
 ## Objective 2.1 Introduction to Spring JDBC
 ### 2.1.1 Use and configure Spring’s JdbcTemplate
+- Autowire JDBC template in
+- can work with 
+    - Simple Types
+    - Generic Maps
+    - Domain Objects
+- Can `query()` with or without bind variables `?`
+- Can use `update()` when inserting rows `?` still applies
+    - Returns the number of rows modified
+- Any non select statement should use update
 ### 2.1.2 Execute queries using callbacks to handle result sets
+- JdbcTemplate can return each row of a resultset as a map
+    - Expecting single row? `queryForMap()`
+    - Expecting multiple rows? `queryForList()`
+    - Useful for ad-hoc reporting/testing as not mapped to an object
+- Callbacks let us handle mapping from Map to Object
+    - ORM might be easier for this if object is complex
+    - `RowMapper` interface: single method to impl `mapRow`
+        - Works for both single and multi row queries
+        - Parameterized to define return type
+    - `ResultSetExtractor`
+        - used for processing entire resultset at once
+        - Used like an iterator
+    - `RowCallbackHandler` : another handler that writes to alternative destinations
 ### 2.1.3 Handle data access exceptions
+- Spring always throws unchecked exceptions
+- `SqlException` (NOT USED BY SPRING)
+    - Checked exception
+    - too general, one for each database error
+    - Class knows you are using JDBC
+    - Tight coupling
+    - can usually not be handled when thrown
+- Spring throws `DataAccessException` which is unchecked
+    - Hides what data library you are using
+    - Actually a higharchy of sub-exceptions
+    - Consistant across all data access technologies
+
 ## Objective 2.2 Transaction Management with Spring
 ### 2.2.1 Describe and use Spring Transaction Management
+- 
 ### 2.2.2 Configure Transaction Propagation
 ### 2.2.3 Setup Rollback rules
 ### 2.2.4 Use Transactions in Tests
 ## Objective 2.3 Spring Boot and Spring Data for Backing Stores
 ### 2.3.1 Implement a Spring JPA application using Spring Boot
+- I have done this 10000000 times
 ### 2.3.2 Create Spring Data Repositories for JPA
+- I have also done this 10000000 times
+
+
+# Section 3 – Spring MVC
+## Objective 3.1 Web Applications with Spring Boot
+### 3.1.1 Explain how to create a Spring MVC application using Spring Boot
+### 3.1.2 Describe the basic request processing lifecycle for REST requests
+### 3.1.3 Create a simple RESTful controller to handle GET requests
+### 3.1.4 Configure for deployment
+## Objective 3.2 REST Applications
+### 3.2.1 Create controllers to support the REST endpoints for various verbs
+### 3.2.2 Utilize RestTemplate to invoke RESTful services
+
+
+# Section 4 – Testing
+## Objective 4.1 Testing Spring Applications
+### 4.1.1 Write tests using JUnit 5
+### 4.1.2 Write Integration Tests using Spring
+### 4.1.3 Configure Tests using Spring Profiles
+### 4.1.4 Extend Spring Tests to work with Databases
+## Objective 4.2 Advanced Testing with Spring Boot and MockMVC
+### 4.2.1 Enable Spring Boot testing
+### 4.2.2 Perform integration testing
+### 4.2.3 Perform MockMVC testing
+### 4.2.4 Perform slice testing
+
+
+# Section 5 – Security
+## Objective 5.1 Explain basic security concepts
+## Objective 5.2 Use Spring Security to configure Authentication and Authorization
+## Objective 5.3 Define Method-level Security
+
+
+# Section 6 – Spring Boot
+## Objective 6.1 Spring Boot Feature Introduction
+### 6.1.1 Explain and use Spring Boot features
+### 6.1.2 Describe Spring Boot dependency management
+## Objective 6.2 Spring Boot Properties and Autoconfiguration
+## 6.2.1 Describe options for defining and loading properties
+## 6.2.2 Utilize auto-configuration
+## 6.2.3 Override default configuration
+## Objective 6.3 Spring Boot Actuator
+### 6.3.1 Configure Actuator endpoints
+### 6.3.2 Secure Actuator HTTP endpoints
+### 6.3.3 Define custom metrics
+### 6.3.4 Define custom health indicators 
+
+
