@@ -456,8 +456,36 @@ Other annotations exist for diffrent data stores
 
 # Section 5 – Security
 ## Objective 5.1 Explain basic security concepts
+- Principal: User device or system that preforms an action
+- Authentication: Establishing principals credentials are valid
+- Authorization: Deciding if pricipal is allowed to access a resource
+- Authority: Permission or credential enabling access
+- Secured Resource: Resource being secured
 ## Objective 5.2 Use Spring Security to configure Authentication and Authorization
+- Setup Filter Chain
+    - 
+- Configure security (Authorization) rules
+- Setup web authentication
+
+`AuthenticationProvider` and `UserDetailsService`
+
+InMemory, Database
+
+Can implement custom AuthenticationProvider
+
+- Password hashing is:
+    - one way
+    - supports multiple encoding schemes
+    - supports multiple schemees (hash is prefixed with scheme in database)
+    - `DelegatingPasswordEncoder` does this all!
+    - BCrypt is the default
+- Enable http authentication with `httpBasic()` in filter chain
+- Form login, and form logout is also configured in filter chain
 ## Objective 5.3 Define Method-level Security
+- Spring uses AOP for method level security
+- `@EnableMethodSecurity`
+- `@PreAuthorize`
+- `@PostAuthorize` Useful for if you need to query from database before knowing if someone can access something
 
 
 # Section 6 – Spring Boot
