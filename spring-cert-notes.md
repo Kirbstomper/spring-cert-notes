@@ -538,11 +538,53 @@ indicate logical file
     - Setting some spring boot properties
     - Explicitly define some beans so spring boot wont
     - Explicity disable some auto configuration
+        - `exclude` property in `@EnableAutoConfiguration`
+        - Set property `spring.autoconfigure.exclude`
     - Change dependencies and their versions
+        - May be needed due to copliance
+        - Vunerabilities
+        - Bugs in given version
 ## Objective 6.3 Spring Boot Actuator
 ### 6.3.1 Configure Actuator endpoints
+- include `spring-boot-starter-actuator`
+- enabled: endpoint is created and bean exists in application context
+    - Default: all endpoints enabled except for `shutdown`
+- exposed: endpoint is acessable via HTTP or JMX
+    - HTTP: Only `health` is exposed by default
+        - http only availible when using Spring MVC, webflux, or Jersey
+    - JMX: All enabled endpoints exposed by default
+        - JMX only availible when `spring.jmx.enabled = true`
+- Configure exposed endpoints with `management.endpoints.web.exposure.include` property
+
 ### 6.3.2 Secure Actuator HTTP endpoints
+- Secure `HealthEndpoint.class` or acutator path using spring security 
 ### 6.3.3 Define custom metrics
+- Custom metrics are measured using Micrometer classes
+    - `Counter`
+    - `Gauge`
+    - `Timer`
+    - `DistributionSummary`: Provides a count, total, and max value for its metric
+- Classes are registered or created with `MeterRegistery` bean
+- Custom metric names listed on `actuator/metrics` endpoint
+- Hiearchital Metrics
+    - Often follow a naming schem with key/value atributtes in the name followed by periods
+    - ex `http.method.<method-value>.status.<status-values>`
+    - Consistant naming is hard to acheive
+    - Adding new attributes can break exisiting queries
+- Dimensional Metrics
+    - Metrics are tagged
+    - ex `http?tag=method:get&tag=status:200
+    - Flexable naming convention
+    - ADding new attributes is easy
+
+- You can create a metric and register it
+- Or you can use annotations like `@Timed` to avoid mixxing concerns
 ### 6.3.4 Define custom health indicators 
-
-
+- Create a class that implements `HealthIndicator`
+    - implement `health()` method
+- Or extend `AbstractHealthIndicator`
+    - override `doHealthCheck()` method
+- Use `Health() builder to return health status
+    - YOu can pass details `Health().down().withDetail(details).build()`
+- You can also group health indicators in configuration
+    - `management.endpoint.health.group.[groupname].include=[indicators]`
