@@ -444,14 +444,76 @@ Other annotations exist for diffrent data stores
 # Section 4 – Testing
 ## Objective 4.1 Testing Spring Applications
 ### 4.1.1 Write tests using JUnit 5
+- JUnit Jupiter
+- `@Test`
+- `@BeforeEach`
+- `@BeforeAll`
+- `@Disabled`
 ### 4.1.2 Write Integration Tests using Spring
+- Integration Test: Tests multiple units working together
+- Unit test already show they work when apart
+- Test application classes in contex of surrounding infrastructure
+- Test Containers is sick
+- Based on `TestContext` framework: Defines a ApplicationContext for your test to use
+-`@ExtendWith(SpringExtension.class)`
+- `@ContextConfiguration(classes = {TestConfig.class})`
+- Then you can inject and use bean as usual! 
+- `@SpringJunitConfig` combines both
+- Can autowire via test method argument
+- You can also include configuration as a inner class
+    - `@Configuration`, `@Import` on inner class
+- Multiple tests share same beans. Use `@DirtiesContext` to make new context between each test
+- `@TestPropertiesSource`
+    - Set `propertes` attribute
+    - Set `location` attribute to pass properties file
+    - Defaults to `[classname].properties`
 ### 4.1.3 Configure Tests using Spring Profiles
+- `@ActiveProfiles` annotation
+- `@Profile` annotation on beans comes into play here
 ### 4.1.4 Extend Spring Tests to work with Databases
+- Use `@Sql` to prepopulate with a sql script before test
+- Use a in-memory database (h2)
+- `@Sql` on method will override class level. 
+    - You can also `setExecutionPhase` property to run after the method
+    - `config` attribute lets you set what happens if the script fails to run, commentPrefix and seperator
+    - Default is whatever comes from `@Sql` on class level else `FAIL_ON_ERROR`
 ## Objective 4.2 Advanced Testing with Spring Boot and MockMVC
 ### 4.2.1 Enable Spring Boot testing
+- Include `spring-boot-starter-test` dependency
+- Built on top of spring testing framework
+- `@SpringBootTest` and other annotations
+- `@MockBean`
+- AssertJ and Hamcrest for asserts/matching
+- Mockito
+- JsonASsert
+- JsonPath
 ### 4.2.2 Perform integration testing
+- Uses `@SpringBootTest`
+- Autoconfigures a `TestRestTemplate`
+    - Uses relative path
+    - Fault tolerant so you can test errors
+    - Use `RestTemplateBuilder` to customize
+- Provides support for diffrent webEnvironment Modes
+- Embedded server can be started by testing framework
 ### 4.2.3 Perform MockMVC testing
+- Provides first class support for testing Spring MVC code
+- Processes request through DispatcherServlet
+- Without running a web container to test
+- Autowire `mockMvc`
+- Set webEnvironment to `MOCK`
+- `MockMvcRequestBuilders` and `MockMvcRequestMatcher`
+- Arguments to `mockMvc.Preform()` determine the action
+    - `preform()` returns `ResultsAction` object which you can chain `expects()` on
+    - `andDo()`, `andReturn()` can do things with `MvcResult` object 
 ### 4.2.4 Perform slice testing
+- Preform isolated testing within a slice of application
+- Requires mocking dependencies
+- Use `@WebMvcTest(controllerName.class)` to only create beans relevant to that controller
+- use `@MockBean`: Spring mock annotation, mockitos won't take the application context into account
+- `@DataJpaTest`
+    - Useful when a test only focuees on JPA components
+    - AutoConfigures `TestEntityManager`
+    - Uses an embedded im-memory database
 
 
 # Section 5 – Security
